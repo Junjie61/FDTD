@@ -31,7 +31,7 @@ figure('Color','w');
 %% DASHBOARD
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% SOURCE PARAMETERS
+% SOURCE PARAMETERS (from fmax, we will calculate the duration of our power source)
 fmax = 5.0 * gigahertz;  % max freq for simulation
 
 % GRID PARAMETERS
