@@ -186,7 +186,7 @@ for T = 1 : STEPS
     end
         
     % Show Status
-    if ~mod(T,100)
+    if ~mod(T,10)
         
         % show fields
         subplot(211);

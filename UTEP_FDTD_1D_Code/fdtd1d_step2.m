@@ -35,7 +35,7 @@ figure('Color','w');
 fmax = 5.0 * gigahertz;  % max freq for simulation
 
 % GRID PARAMETERS
-nmax = 1;
+nmax = 1; % maximum refractive index
 NLAM = 10;  % grid resolution, use 20 to reduce dispersion
 %NLAM = 20;  % grid resolution, use 20 to reduce dispersion
 NBUFZ = [100 100];  % buffer before and after a device
@@ -45,8 +45,8 @@ NBUFZ = [100 100];  % buffer before and after a device
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % NOMINAL RESOLUTION
-lam0 = c0/fmax;
-dz    = lam0/nmax/NLAM;
+lam0 = c0/fmax; % the shortest wavelength, the wavelength at the highest frequency
+dz   = lam0/nmax/NLAM; % grid resolution
 
 % COMPUTE GRID SIZE
 Nz    = sum(NBUFZ) + 3;
@@ -68,21 +68,21 @@ UR = ones(1,Nz);
 
 % COMPUTE TIME STEP (dt)
 nbc = sqrt(UR(1)*ER(1));
-dt = nbc*dz/(2*c0);
+dt  = nbc*dz/(2*c0);
 
-% COMPUTE SOURCE PARAMETERS
+% COMPUTE SOURCE PARAMETERS(duration needs to be sufficient so that it includes enough power at out maximum frequency)
 tau = 0.5/fmax;   % duration
-t0 = 5*tau;       % offset
+t0 = 5*tau;       % offset (delay)
 
 % COMPUTE NUMBER OF TIME STEPS
-tprop = nmax*Nz*dz/c0;
-t     = 2*t0 + 3*tprop;
-STEPS = ceil(t/dt);
+tprop = nmax*Nz*dz/c0; % time it takes in the worst case for a wave travels across our grid left to right. Nz*dz is the length of our grid.
+t     = 2*t0 + 3*tprop; % total simulation time. add two offset, and 3 propagation times.
+STEPS = ceil(t/dt); % total number of steps
 
 % COMPUTE THE SOURCE
 t      = [0:STEPS-1]*dt;
-nz_src = round(Nz/2);
-Esrc = exp(-((t - t0)/tau).^2);
+nz_src = round(Nz/2); % inject the source in the middle of our grid, this value is the position of the source
+Esrc   = exp(-((t - t0)/tau).^2);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIALIZE FDTD PARAMETERS
@@ -117,7 +117,8 @@ for T = 1 : STEPS
         Ey(nz) = Ey(nz) + mEy(nz)*( Hx(nz) - Hx(nz-1) )/dz;
     end
     
-    % Inject E Source (Soft Source)
+    % Inject E Source (Soft Source which means we're just adding a value to
+    % whatever field value happens to be at a certain point.
     Ey(nz_src) = Ey(nz_src) + Esrc(T);
     
     % Show Status

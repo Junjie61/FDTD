@@ -91,6 +91,7 @@ Hsrc   = A*exp(-((t - t0 + s)/tau).^2);
 % plot(t,-Hsrc,'-r')
 % hold off;
 % return;
+% break;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIALIZE FDTD PARAMETERS
